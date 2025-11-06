@@ -1,0 +1,91 @@
+<!-- Arquivo: index.html (Atualizado: social na sidebar + Nimbo no portfólio via JS) -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Meu Portfólio</title>
+
+    <!-- Font Awesome -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2Y4V1sFZC9sZ0s7Mggv0SNYb8r7ZrZ6N6Vv0gq9qU5J9nC6b8K7YkdU9wQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+  <body>
+    <a class="skip-to-content" href="#conteudo">Pular para o conteúdo</a>
+
+    <nav class="sidebar" aria-label="Navegação lateral" id="sidebar" data-sidebar>
+      <a href="index.html" class="logo">FaFeJAVA</a>
+
+      <ul class="menu-links">
+        <li><a href="index.html" aria-current="page"><i class="fa-solid fa-house"></i> Início</a></li>
+        <li><a href="sobre.html"><i class="fa-solid fa-user"></i> Sobre</a></li>
+        <li><a href="contato.html"><i class="fa-solid fa-envelope"></i> Contato</a></li>
+      </ul>
+
+      <!-- Social -->
+      <div class="sidebar-social" aria-label="Minhas redes">
+        <div class="social-links">
+          <a class="social-btn" href="https://github.com/Fabferna" target="_blank" rel="noopener" aria-label="Abrir GitHub de Fabio">
+            <i class="fa-brands fa-github" aria-hidden="true"></i>
+            <span>GitHub</span>
+          </a>
+          <a class="social-btn" href="https://www.linkedin.com/in/fabio-fernandes-javarrotti-j%C3%BAnior-372172120" target="_blank" rel="noopener" aria-label="Abrir LinkedIn de Fabio">
+            <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+            <span>LinkedIn</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <button class="mobile-menu-button"
+            aria-label="Abrir menu"
+            aria-controls="sidebar"
+            aria-expanded="false"
+            data-menu-button>
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    </button>
+
+    <main id="conteudo" class="content">
+      <header class="page-header">
+        <h1>Meus Projetos</h1>
+        <p>Um catálogo interativo dos meus trabalhos recentes.</p>
+      </header>
+
+      <!-- Carrossel (é removido via JS se houver < 4 projetos) -->
+      <section class="carousel" aria-label="Projetos em destaque">
+        <div class="carousel-track" data-carousel-track></div>
+        <div class="carousel-controls">
+          <button class="carousel-btn" data-carousel-prev aria-label="Projeto anterior">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button class="carousel-btn" data-carousel-next aria-label="Próximo projeto">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- Grade -->
+      <section id="projetos" class="projects-grid" aria-label="Todos os projetos" data-projects-grid></section>
+    </main>
+
+    <div class="modal" data-modal aria-hidden="true">
+      <div class="modal-backdrop" data-modal-backdrop></div>
+      <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc" tabindex="-1" data-modal-dialog>
+        <button class="modal-close" aria-label="Fechar" data-modal-close>
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+        <img class="modal-image" alt="" data-modal-image />
+        <h2 id="modal-title" data-modal-title></h2>
+        <p id="modal-desc" data-modal-desc></p>
+        <div class="modal-links" data-modal-links></div>
+      </div>
+    </div>
+
+    <script src="./assets/js/script.js" defer></script>
+  </body>
+</html>
