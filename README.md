@@ -3,7 +3,7 @@
 Portfólio pessoal construído com **HTML5**, **CSS3** e **JavaScript** puro.  
 Foco em **UI/UX**, **responsividade** e **acessibilidade** — sem dependências de build.
 
-> **Demo:** _(adicione aqui a URL quando publicar)_  
+> **Demo:** _(https://fabferna.github.io/meu-portfolio/)_  
 > **Autor:** [Fabio Javarrotti](https://github.com/Fabferna) · [LinkedIn](https://www.linkedin.com/in/fabio-fernandes-javarrotti-j%C3%BAnior-372172120)
 
 ---
