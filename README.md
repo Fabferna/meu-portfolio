@@ -1,73 +1,81 @@
-# React + TypeScript + Vite
+# 🚀 Portfólio Profissional (2025 Edition)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Um portfólio moderno, responsivo e de alta performance desenvolvido para demonstrar expertise em Front-end Engineering e UI/UX.
 
-Currently, two official plugins are available:
+![Preview do Projeto](public/assets/preview-cover.png) 
+https://meu-portfolio-henna.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Funcionalidades
 
-## React Compiler
+- **💎 Design Moderno:** Estética "Dark SaaS" com Tailwind CSS, focada em tipografia e espaçamento.
+- **⚡ Performance Extrema:** Construído com Vite + React, carregamento instantâneo.
+- **⌨️ Command Menu (Ctrl+K):** Navegação rápida estilo VSCode/Spotlight acessível via teclado.
+- **📱 Mobile First:** Layout totalmente responsivo e adaptável a qualquer dispositivo.
+- **🎨 UI Interativa:** Micro-interações com Framer Motion e cards com efeitos de hover.
+- **♿ Acessibilidade:** Foco gerenciado, contraste adequado e HTML semântico.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Stack Tecnológica
 
-## Expanding the ESLint configuration
+Este projeto utiliza as ferramentas mais atuais do mercado (Standard 2025):
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Core:** [React 18](https://react.dev/) + [Vite](https://vitejs.dev/)
+- **Linguagem:** [TypeScript](https://www.typescriptlang.org/)
+- **Estilização:** [Tailwind CSS v3](https://tailwindcss.com/)
+- **Ícones:** [Lucide React](https://lucide.dev/)
+- **Animações:** [Framer Motion](https://www.framer.com/motion/)
+- **Utils:** `clsx` e `tailwind-merge` para classes condicionais.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🚀 Como rodar localmente
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Siga os passos abaixo para clonar e executar o projeto na sua máquina:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Pré-requisitos
+- Node.js (versão 18 ou superior) instalado.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Passo a passo
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Clone o repositório**
+   ```bash
+   git clone [https://github.com/Fabferna/meu-portfolio.git](https://github.com/Fabferna/meu-portfolio.git)
+   cd meu-portfolio
+Instale as dependências
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Bash
+
+npm install
+Inicie o servidor de desenvolvimento
+
+Bash
+
+npm run dev
+Acesse no navegador O projeto estará rodando em http://localhost:5173
+
+📦 Como fazer Deploy
+Este projeto é otimizado para deploy na Vercel ou GitHub Pages.
+
+Vercel (Recomendado)
+Crie uma conta na Vercel.
+
+Importe este repositório do GitHub.
+
+A Vercel detectará o Vite automaticamente. Clique em Deploy.
+
+📂 Estrutura de Pastas
+Plaintext
+
+src/
+├── components/      # Componentes React modularizados
+│   ├── features/    # Funcionalidades complexas (CommandMenu, ProjectCard)
+│   └── ui/          # Elementos de UI reutilizáveis (Badge, Buttons)
+├── data/            # Dados estáticos (textos, links, projetos)
+├── lib/             # Utilitários e helpers
+└── App.tsx          # Componente principal e Layout
+📄 Licença
+Este projeto está sob a licença MIT. Sinta-se à vontade para usar como inspiração.
+
+<div align="center"> Desenvolvido com 💜 por <a href="https://www.linkedin.com/in/fabio-javarrotti-372172120/" target="_blank">Fabio Javarrotti</a> </div>
+
+
+### Dica Extra (Opcional):
+
+No README eu coloquei uma referência a uma imagem `preview-cover.png`. Se você quiser deixar seu GitHub **muito bonito**, tire um print da tela inicial do seu site funcionando, salve com esse nome dentro de `public/assets/` e suba para o GitHub. Assim, quem entrar no seu repositório já vê a cara do site de primeira\!
