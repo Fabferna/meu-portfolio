@@ -11,8 +11,7 @@ export const personalInfo = {
   social: {
     github: 'https://github.com/Fabferna',
     linkedin: 'https://www.linkedin.com/in/fabio-javarrotti-372172120/',
-    // TODO: substitua pelo seu e-mail profissional
-    email: 'seuemail@exemplo.com',
+    email: 'fabiofjj@hotmail.com',
   },
 };
 
