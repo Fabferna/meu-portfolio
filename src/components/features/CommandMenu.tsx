@@ -1,106 +1,175 @@
-import { useEffect, useState } from 'react';
-import { Search, X, ArrowRight } from 'lucide-react';
-import { projects, personalInfo } from '../../data/content';
-import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowUpRight, CornerDownLeft, Hash, Mail, Search } from 'lucide-react';
+import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react';
+import { navItems, personalInfo, projects } from '../../data/content';
+import { cn } from '../../lib/utils';
 
-export function CommandMenu() {
-  const [open, setOpen] = useState(false);
+type Item = { id: string; group: string; label: string; hint?: string; icon: typeof Hash; run: () => void };
+
+/**
+ * Paleta de comandos (Ctrl/⌘ + K). Sem animação de abertura de propósito:
+ * é uma ação de teclado, repetida muitas vezes — precisa parecer instantânea.
+ */
+export function CommandMenu({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+  const [query, setQuery] = useState('');
+  const [activeIndex, setActiveIndex] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const restoreFocus = useRef<HTMLElement | null>(null);
+  const listId = useId();
 
   useEffect(() => {
-    const down = (e: globalThis.KeyboardEvent) => {
-      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((open) => !open);
+        onOpenChange(!open);
       }
     };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open, onOpenChange]);
 
-    document.addEventListener('keydown', down);
-    return () => document.removeEventListener('keydown', down);
+  useEffect(() => {
+    if (open) {
+      restoreFocus.current = document.activeElement as HTMLElement | null;
+      setQuery('');
+      setActiveIndex(0);
+      inputRef.current?.focus();
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      restoreFocus.current?.focus?.();
+    }
+  }, [open]);
+
+  const close = () => onOpenChange(false);
+
+  const items = useMemo<Item[]>(() => {
+    const go = (id: string) => () => {
+      close();
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    };
+    return [
+      ...navItems.map((n) => ({ id: `nav-${n.id}`, group: 'Navegação', label: n.label, icon: Hash, run: go(n.id) })),
+      ...projects.map((p) => ({
+        id: `project-${p.id}`,
+        group: 'Projetos',
+        label: p.title,
+        hint: p.category,
+        icon: ArrowUpRight,
+        run: () => {
+          close();
+          window.open(p.demoUrl, '_blank', 'noopener,noreferrer');
+        },
+      })),
+      {
+        id: 'email',
+        group: 'Contato',
+        label: 'Enviar e-mail',
+        hint: personalInfo.social.email,
+        icon: Mail,
+        run: () => {
+          close();
+          window.location.href = `mailto:${personalInfo.social.email}`;
+        },
+      },
+    ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleNav = (id: string) => {
-    setOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return items;
+    return items.filter((i) => `${i.label} ${i.hint ?? ''} ${i.group}`.toLowerCase().includes(q));
+  }, [items, query]);
+
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      close();
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveIndex((i) => (filtered.length ? (i + 1) % filtered.length : 0));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveIndex((i) => (filtered.length ? (i - 1 + filtered.length) % filtered.length : 0));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      filtered[activeIndex]?.run();
+    } else if (e.key === 'Tab') {
+      // Mantém o foco dentro do diálogo.
+      e.preventDefault();
+      inputRef.current?.focus();
     }
   };
 
+  if (!open) return null;
+
+  let lastGroup = '';
   return (
-    <>
-      <div className="fixed bottom-6 right-6 z-40 hidden md:flex items-center gap-2 px-3 py-1.5 bg-zinc-900/80 backdrop-blur border border-zinc-800 rounded-full text-xs text-zinc-500 font-mono shadow-lg cursor-pointer hover:bg-zinc-800 transition-colors" onClick={() => setOpen(true)}>
-        <span>Command Menu</span>
-        <kbd className="bg-zinc-800 px-1.5 rounded text-zinc-300 border border-zinc-700">Ctrl K</kbd>
-      </div>
+    <div className="fixed inset-0 z-[70] flex items-start justify-center px-4 pt-[14vh]" onKeyDown={onKeyDown}>
+      <div className="absolute inset-0 bg-ink-sunken/70 backdrop-blur-sm" onClick={close} aria-hidden />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu de comandos"
+        className="relative w-full max-w-xl overflow-hidden rounded-2xl border border-line bg-ink-raised shadow-[0_40px_120px_-20px_rgb(0_0_0/0.8)]"
+        data-testid="command-menu"
+      >
+        <div className="flex items-center gap-3 border-b border-line px-5">
+          <Search size={18} className="text-muted" aria-hidden />
+          <input
+            ref={inputRef}
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setActiveIndex(0);
+            }}
+            placeholder="Buscar seções, projetos, contato…"
+            className="h-14 flex-1 bg-transparent text-ivory outline-none placeholder:text-subtle focus-visible:outline-none"
+            role="combobox"
+            aria-expanded="true"
+            aria-controls={listId}
+            aria-activedescendant={filtered[activeIndex] ? `cmd-${filtered[activeIndex].id}` : undefined}
+            aria-autocomplete="list"
+            aria-label="Buscar"
+          />
+          <kbd className="rounded-md border border-line px-1.5 py-0.5 font-mono text-[0.7rem] text-muted">Esc</kbd>
+        </div>
 
-      <AnimatePresence>
-        {open && (
-          <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] px-4">
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-              onClick={() => setOpen(false)}
-            />
-            
-            <motion.div 
-              initial={{ scale: 0.95, opacity: 0 }} 
-              animate={{ scale: 1, opacity: 1 }} 
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl overflow-hidden"
-            >
-              <div className="flex items-center px-4 py-3 border-b border-zinc-800">
-                <Search className="w-5 h-5 text-zinc-500 mr-3" />
-                <input 
-                  placeholder="O que você procura? (Projetos, Contato...)" 
-                  className="flex-1 bg-transparent border-none outline-none text-zinc-200 placeholder:text-zinc-600 focus:ring-0"
-                  autoFocus
-                />
-                <button onClick={() => setOpen(false)} className="text-zinc-500 hover:text-white transition-colors">
-                    <X size={18} />
-                </button>
-              </div>
-
-              <div className="p-2 max-h-[60vh] overflow-y-auto">
-                <div className="text-xs font-semibold text-zinc-500 px-2 py-1 mb-1 uppercase tracking-wider">Navegação</div>
-                {['home', 'sobre', 'projetos', 'contato'].map((section) => (
-                  <button 
-                    key={section}
-                    onClick={() => handleNav(section)}
-                    className="w-full text-left flex items-center px-2 py-2 rounded-lg text-zinc-300 hover:bg-primary/10 hover:text-primary transition-colors group"
-                  >
-                    <ArrowRight size={14} className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    Ir para {section.charAt(0).toUpperCase() + section.slice(1)}
-                  </button>
-                ))}
-
-                <div className="text-xs font-semibold text-zinc-500 px-2 py-1 mt-3 mb-1 uppercase tracking-wider">Projetos Recentes</div>
-                {projects.map((p) => (
-                  <a 
-                    key={p.id}
-                    href={p.demoUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center px-2 py-2 rounded-lg text-zinc-300 hover:bg-zinc-800 transition-colors"
-                  >
-                    <span className="w-2 h-2 rounded-full bg-primary mr-3 shadow-[0_0_8px_rgba(139,92,246,0.5)]"></span>
-                    {p.title}
-                  </a>
-                ))}
-              </div>
-              
-              <div className="bg-zinc-950 px-4 py-2 text-xs text-zinc-600 border-t border-zinc-800 flex justify-between items-center">
-                <span>{personalInfo.name} Portfolio</span>
-                <div className="flex gap-2">
-                    <span className="bg-zinc-800 px-1.5 rounded text-zinc-400">↑↓</span>
-                    <span className="bg-zinc-800 px-1.5 rounded text-zinc-400">Enter</span>
+        <ul id={listId} role="listbox" aria-label="Resultados" className="max-h-[50vh] overflow-y-auto p-2">
+          {filtered.length === 0 && <li className="px-3 py-10 text-center text-sm text-muted">Nada encontrado para “{query}”.</li>}
+          {filtered.map((item, i) => {
+            const showGroup = item.group !== lastGroup;
+            lastGroup = item.group;
+            const active = i === activeIndex;
+            return (
+              <li key={item.id} role="presentation">
+                {showGroup && <div className="eyebrow px-3 pb-1.5 pt-3 text-[0.65rem]">{item.group}</div>}
+                <div
+                  id={`cmd-${item.id}`}
+                  role="option"
+                  aria-selected={active}
+                  onPointerMove={() => setActiveIndex(i)}
+                  onClick={item.run}
+                  className={cn(
+                    'flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm',
+                    active ? 'bg-ivory/[0.07] text-ivory' : 'text-muted',
+                  )}
+                >
+                  <item.icon size={16} aria-hidden className={active ? 'text-accent' : ''} />
+                  <span className="flex-1 truncate">{item.label}</span>
+                  {item.hint && <span className="hidden truncate font-mono text-xs text-subtle sm:block">{item.hint}</span>}
+                  {active && <CornerDownLeft size={14} aria-hidden className="text-subtle" />}
                 </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-    </>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="flex items-center justify-between border-t border-line px-5 py-3 font-mono text-[0.7rem] text-subtle">
+          <span>{personalInfo.name}</span>
+          <span>↑↓ navegar · ↵ abrir</span>
+        </div>
+      </div>
+    </div>
   );
 }

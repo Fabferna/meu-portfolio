@@ -7,18 +7,19 @@ https://meu-portfolio-henna.vercel.app/
 
 ## ✨ Funcionalidades
 
-- **💎 Design Moderno:** Estética "Dark SaaS" com Tailwind CSS, focada em tipografia e espaçamento.
-- **⚡ Performance Extrema:** Construído com Vite + React, carregamento instantâneo.
-- **⌨️ Command Menu (Ctrl+K):** Navegação rápida estilo VSCode/Spotlight acessível via teclado.
-- **📱 Mobile First:** Layout totalmente responsivo e adaptável a qualquer dispositivo.
-- **🎨 UI Interativa:** Micro-interações com Framer Motion e cards com efeitos de hover.
-- **♿ Acessibilidade:** Foco gerenciado, contraste adequado e HTML semântico.
+- **💎 Identidade editorial:** tinta quente, marfim e um único acento laranja; tipografia *Instrument Serif* + *Inter Tight* + *JetBrains Mono*.
+- **🎬 Motion premium:** revelações de texto linha a linha, imagens com `clip-path` ao rolar, parallax sutil, botões magnéticos com mola e cursor "Ver ao vivo" nos projetos — tudo respeitando `prefers-reduced-motion`.
+- **🎯 Foco comercial:** fluxo Hero → Trabalhos → Serviços → Sobre → Contato, com CTAs recorrentes e e-mail com cópia em um clique.
+- **⌨️ Command Menu (Ctrl/⌘ + K):** busca com filtro, navegação por setas e Enter, padrão combobox/listbox acessível.
+- **📱 Do mobile ao ultrawide:** gutter fluido, tipografia com `clamp()` e largura máxima controlada.
+- **♿ Acessibilidade:** skip link, landmarks, foco visível, contraste AA/AAA e menu móvel com Escape.
+- **🧪 Testes E2E:** Playwright em desktop e mobile, com `data-testid` e seletores por papel (role).
 
 ## 🛠️ Stack Tecnológica
 
 Este projeto utiliza as ferramentas mais atuais do mercado (Standard 2025):
 
-- **Core:** [React 18](https://react.dev/) + [Vite](https://vitejs.dev/)
+- **Core:** [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
 - **Linguagem:** [TypeScript](https://www.typescriptlang.org/)
 - **Estilização:** [Tailwind CSS v3](https://tailwindcss.com/)
 - **Ícones:** [Lucide React](https://lucide.dev/)
@@ -60,16 +61,28 @@ Importe este repositório do GitHub.
 
 A Vercel detectará o Vite automaticamente. Clique em Deploy.
 
-📂 Estrutura de Pastas
-Plaintext
+🧪 Testes end-to-end
 
+```bash
+npm run test:e2e   # build + preview + Playwright (desktop e mobile)
+```
+
+📂 Estrutura de Pastas
+
+```
 src/
-├── components/      # Componentes React modularizados
-│   ├── features/    # Funcionalidades complexas (CommandMenu, ProjectCard)
-│   └── ui/          # Elementos de UI reutilizáveis (Badge, Buttons)
-├── data/            # Dados estáticos (textos, links, projetos)
-├── lib/             # Utilitários e helpers
-└── App.tsx          # Componente principal e Layout
+├── components/
+│   ├── features/    # CommandMenu, ProjectCase
+│   ├── layout/      # Header, Footer
+│   ├── sections/    # Hero, Marquee, Work, Services, About, Contact
+│   └── ui/          # Reveal, ButtonLink, SectionHeader
+├── data/            # Conteúdo (textos, links, projetos, serviços)
+├── hooks/           # useActiveSection
+├── lib/             # utils + curvas de easing
+└── App.tsx
+tests/e2e/           # Specs do Playwright
+```
+
 📄 Licença
 Este projeto está sob a licença MIT. Sinta-se à vontade para usar como inspiração.
 
